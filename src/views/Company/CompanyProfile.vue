@@ -124,7 +124,7 @@
                             </div>
                             <q-img @mouseover="visibleLogoOptions = true" @mouseleave="visibleLogoOptions = false"
                                 class="cursor-pointer " fit="contain" :ratio="1"
-                                :src="companyStore.info.logo ? companyStore.info.logo : '/src/assets/images/logo.png'">
+                                :src="companyStore.info.logo ? companyStore.info.logo : Demologo">
                                 <div v-show="visibleLogoOptions"
                                     class="absolute-bottom  text-subtitle2 row justify-center ">
                                     <q-btn flat icon="visibility" @click="showLogo">
@@ -218,7 +218,7 @@
                             </div>
                             <q-img @mouseover="visibleBannerOptions = true" @mouseleave="visibleBannerOptions = false"
                                 class="cursor-pointer " fit="contain" :ratio="1"
-                                :src="companyStore.info.bannerImage ? companyStore.info.bannerImage : '/src/assets/images/logo.png'">
+                                :src="companyStore.info.bannerImage ? companyStore.info.bannerImage : Demologo">
                                 <div v-show="visibleBannerOptions"
                                     class="absolute-bottom  text-subtitle2 row justify-center ">
                                     <q-btn flat icon="visibility" @click="showBanner">
@@ -273,7 +273,7 @@
             <q-card>
                 <q-card-section>
                     <q-img :ratio="1" fit="contain" width="400px"
-                        :src="companyStore.info.logo ? companyStore.info.logo : '/src/assets/images/logo.png'">
+                        :src="companyStore.info.logo ? companyStore.info.logo : Demologo">
                     </q-img>
                 </q-card-section>
                 <q-card-actions align="right">
@@ -285,7 +285,7 @@
             <q-card>
                 <q-card-section>
                     <q-img :ratio="1" fit="contain" width="400px"
-                        :src="companyStore.info.bannerImage ? companyStore.info.bannerImage : '/src/assets/images/logo.png'">
+                        :src="companyStore.info.bannerImage ? companyStore.info.bannerImage : Demologo">
                     </q-img>
                 </q-card-section>
                 <q-card-actions align="right">
@@ -325,7 +325,7 @@ import { companyDictionary } from "../../assets/dictionary/company"
 import WorkingAreaSelectVue from '../../components/Company/WorkingAreaSelect.vue'
 import BenefitsSelectVue from '../../components/Company/BenefitsSelect.vue'
 import { updateCompanyInfo } from "../../apis/company"
-
+import Demologo from "../../assets/images/logo.png"
 import { useQuasar, QSpinnerFacebook  } from 'quasar'
 
 export default {
@@ -348,6 +348,7 @@ export default {
 
     data() {
         return {
+            Demologo: Demologo,
             $q: useQuasar(),
             bannerInput: null,
             isShowBanner: false,
