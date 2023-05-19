@@ -6,7 +6,7 @@
         <q-toolbar-title class="col-2">
           <router-link to="/">
             <div class="row items-center q-gutter-xs">
-              <q-img width="60px" src="../../public/static/images/just_logo.png"></q-img>
+              <q-img width="60px" src="../assets/images/just_logo.png"></q-img>
 
               <div class=" text-weight-medium">
                 <span>Thaiwork</span>

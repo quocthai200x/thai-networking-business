@@ -46,7 +46,7 @@
                                             <q-img width="100%" :ratio="1" :src="candidate.info.avatar" />
                                         </q-avatar>
                                         <q-avatar v-else class="fit">
-                                            <q-img width="100%" :ratio="1" src="../../../public/static/images/avatar-default.jpg" />
+                                            <q-img width="100%" :ratio="1" src="../../assets/images/avatar-default.jpg" />
                                         </q-avatar>
                                     </div>
                                 </div>

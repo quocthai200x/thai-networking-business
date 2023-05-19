@@ -47,7 +47,8 @@
                 <div class="row no-wrap q-gutter-md">
                     <q-avatar size="100px">
                         <img
-                            :src="companyStore.info.logo ? companyStore.info.logo : '../../../../public/static/images/logo.png'" />
+                        
+                            :src="companyStore.info.logo ? companyStore.info.logo : '../../../assets/images/logo.jpg'" />
                     </q-avatar>
                     <div class="">
                         <div class="text-capitalize text-bold text-subtitle1 q-mb-md">

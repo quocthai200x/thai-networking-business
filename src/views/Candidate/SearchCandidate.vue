@@ -50,7 +50,7 @@
                             <div class="col-3">
                                 <q-avatar size="80px">
                                     <img style="object-fit:cover;"
-                                        :src="user.info.avatar ? user.info.avatar : '../../../public/static/images/avatar-default.jpg'" />
+                                        :src="user.info.avatar ? user.info.avatar : '../../../assets/images/avatar-default.jpg'" />
                                 </q-avatar>
                             </div>
                             <div class="col-9">

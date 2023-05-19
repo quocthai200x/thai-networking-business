@@ -7,7 +7,7 @@
                 <div class="flex justify-center items-center">
 
                     <div class="q-mb-xl">
-                        <q-img width="200px" src="../../../public/static/images/logo.png"></q-img>
+                        <q-img width="200px" src="../../assets/images/logo.png"></q-img>
                     </div>
                     <q-carousel v-model="slide" transition-prev="slide-right" transition-next="slide-left" swipeable
                         animated infinite :autoplay="autoplay" control-color="white" navigation padding height="500px"
@@ -23,7 +23,7 @@
                             <div class="block justify-center items-center q-mb-md ">
                                 <div class="flex justify-center items-center q-mb-md">
                                     <q-img class="rounded-borders" rounded-borders fit="fill" :ratio="16 / 9"
-                                        width="200px" src="../../../public/static/images/login_banner_1.png"></q-img>
+                                        width="200px" src="../../assets/images/login_banner_1.png"></q-img>
                                 </div>
                                 <div class="text-center text-subtitle2">
                                     <span>Giọng nói thành Văn bản</span>
@@ -37,7 +37,7 @@
                             <div class="block justify-center items-center  q-mb-md ">
                                 <div class="flex justify-center items-center q-mb-md">
                                     <q-img class="rounded-borders" rounded-borders fit="fill" :ratio="16 / 9"
-                                        width="200px" src="../../../public/static/images/login_banner_2.png"></q-img>
+                                        width="200px" src="../../assets/images/login_banner_2.png"></q-img>
                                 </div>
                                 <div class="text-center text-subtitle2">
                                     <span>Tất cả CV tại 1 nơi</span>
@@ -54,7 +54,7 @@
                             <div class="block justify-center items-center q-mb-md ">
                                 <div class="flex justify-center items-center q-mb-md">
                                     <q-img class="rounded-borders" rounded-borders fit="fill" :ratio="16 / 9"
-                                        width="200px" src="../../../public/static/images/login_banner_3.png"></q-img>
+                                        width="200px" src="../../assets/images/login_banner_3.png"></q-img>
                                 </div>
                                 <div class="text-center text-subtitle2">
                                     <span>Đánh giá và So sánh</span>
@@ -69,7 +69,7 @@
                             <div class="block justify-center items-center  q-mb-md ">
                                 <div class="flex justify-center items-center q-mb-md">
                                     <q-img class="rounded-borders" rounded-borders fit="fill" :ratio="16 / 9"
-                                        width="200px" src="../../../public/static/images/login_banner_4.png"></q-img>
+                                        width="200px" src="../../assets/images/login_banner_4.png"></q-img>
                                 </div>
                                 <div class="text-center text-subtitle2">
                                     <span>Hệ thống quản lí ứng viên</span>
