@@ -319,7 +319,7 @@ export default {
             if (newValue == "Tất cả") {
                 // chưa có cột trạng thái
                 if (!this.columns.some(element => element.name == "Trạng thái")) {
-                    this.columns.push(
+                    this.columns.splice(4, 0,
                         {
                             name: 'Trạng thái',
                             label: 'Trạng thái',
@@ -343,16 +343,20 @@ export default {
             // filter application
 
             this.listApplicationShow = this.listApplication.filter(element => {
-                if (element.status.name == newValue) {
+                if (newValue == "Tất cả") {
+                    return element
+                }
+                else if (element.status.name == newValue) {
                     return element
                 } else if (element.status.note) {
                     if (element.status.note.name == newValue) {
                         return element
                     }
-                } else if (newValue == "Tất cả") {
-                    return element
                 }
+
             })
+            console.log(this.listApplication)
+            console.log(this.listApplicationShow)
         },
         "jobSelected"(newValue, oldValue) {
             if (newValue != oldValue && this.listJobsName.includes(newValue)) {
