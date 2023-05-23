@@ -355,8 +355,8 @@ export default {
                 }
 
             })
-            console.log(this.listApplication)
-            console.log(this.listApplicationShow)
+            // console.log(this.listApplication)
+            // console.log(this.listApplicationShow)
         },
         "jobSelected"(newValue, oldValue) {
             if (newValue != oldValue && this.listJobsName.includes(newValue)) {

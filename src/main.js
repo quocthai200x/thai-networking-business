@@ -13,7 +13,8 @@ import 'quasar/src/css/index.sass'
 import router from "./router"
 import langVi from 'quasar/lang/vi'
 
-
+import VueDatePicker from '@vuepic/vue-datepicker';
+import '@vuepic/vue-datepicker/dist/main.css'
 
 
 const myApp = createApp(App)
@@ -40,7 +41,7 @@ moment.updateLocale('en', {
     }
 });
 
-
+myApp.component('VueDatePicker', VueDatePicker);
 myApp.config.globalProperties.$moment = moment
 myApp.use(VueGoogleMaps, {
     load: {

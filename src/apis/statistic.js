@@ -14,3 +14,19 @@ export const getCountAllStatusDevideToEmployee = async ({from, to}) =>{
     }
 }
 
+
+
+export const getCountEachEmployer = async ({from, to, email}) =>{
+    try {
+        let res = await axios.get(`/statistic/based-employer?from=${from}&to=${to}&email=${email}`)
+        if(res.status == 200){
+            return res.data 
+        }else{
+            throw new Error(res.data)
+        }
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+

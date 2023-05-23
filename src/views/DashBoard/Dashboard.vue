@@ -1,5 +1,5 @@
 <template >
-    <div class="row ">
+    <div class="row q-mb-md ">
         <div class="col-6">
             <q-card flat>
                 <div class="text-bold q-pa-md text-subtitle2">Trạng thái tin đăng </div>
@@ -98,10 +98,10 @@
                         </div>
                  
                 </q-card>
-                <StatisticVue></StatisticVue>
             </div>
         </div>
     </div>
+    <StatisticVue></StatisticVue>
 </template>
 <script>
 

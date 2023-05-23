@@ -12,6 +12,7 @@
     "@fawmi/vue-google-maps": "^0.9.79",
     "@quasar/extras": "^1.15.6",
     "@volar-plugins/vetur": "^0.1.0",
+    "@vuepic/vue-datepicker": "^5.1.2",
     "axios": "^1.2.0",
     "chart.js": "^4.3.0",
     "cloudinary-core": "^2.13.0",
