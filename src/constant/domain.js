@@ -1,5 +1,5 @@
 
-const FRONT_END_BASE = process.env.NODE_ENV === 'development'?'http://localhost:5173':'https://project-iii-front.vercel.app/'
+const FRONT_END_BASE = process.env.NODE_ENV === 'development'?'http://localhost:5173':'https://thai-networking.vercel.app/'
 
 
 
