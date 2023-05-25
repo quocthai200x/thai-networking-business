@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@canvasjs/charts": "^3.7.7",
     "@fawmi/vue-google-maps": "^0.9.79",
     "@quasar/extras": "^1.15.6",
     "@volar-plugins/vetur": "^0.1.0",
