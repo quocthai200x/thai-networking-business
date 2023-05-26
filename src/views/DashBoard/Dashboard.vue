@@ -101,7 +101,7 @@
             </div>
         </div>
     </div>
-    <StatisticVue></StatisticVue>
+   
 </template>
 <script>
 
@@ -109,13 +109,10 @@ import DrawerVue from '../../layouts/Drawer.vue'
 import { getCountJobByStatus } from "../../apis/job"
 import { suggestCandidate } from "../../apis/search"
 import { ref } from 'vue'
-import StatisticVue from "./Statistic.vue"
-// import DefaultAvatar from "../../../public/static/images/avatar-default.jpg"
+
 
 export default {
-    components: {
-        StatisticVue,
-    },
+  
     data() {
         return {
             // DefaultAvatar: DefaultAvatar,

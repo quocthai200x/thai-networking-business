@@ -46,7 +46,7 @@ export const getCandidateFunnel = async ({from, to, jobName, employerEmail}) =>{
 
 export const getListStatistic = async ({from, to, jobName, employerEmail}) =>{
     try {
-        let res = await axios.get(`/statistic/candidate-funnel?from=${from}&to=${to}&jobName=${jobName}&employerEmail=${employerEmail}`)
+        let res = await axios.get(`/statistic/get-list-statistics?from=${from}&to=${to}&jobName=${jobName}&employerEmail=${employerEmail}`)
         if(res.status == 200){
             return res.data 
         }else{

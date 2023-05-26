@@ -208,6 +208,13 @@ export default {
           link: "/employee/management",
           name: "Employee Management"
         },
+        {
+          icon: `analytics`,
+          label: 'Báo cáo tổng quan',
+          separator: false,
+          link: "/report",
+          name: "Report Panel"
+        },
                {
           icon: `search`,
           label: 'Tìm kiếm ứng viên',
