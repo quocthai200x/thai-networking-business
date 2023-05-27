@@ -1,6 +1,9 @@
 <template>
-    <div v-if="visiblePage">
-        <q-card class="q-my-md" flat>
+    <div v-if="visiblePage" class="q-my-md">
+        <div>
+            <StatusAmount :key="keyStatusAmount" :loading="loadingStatusAmount" :statusAmountData="statusAmountData"></StatusAmount>
+        </div>
+        <q-card flat>
             <q-card-section class="">
 
                 <div class="text-bold q-pa-md text-subtitle2">Tỉ lệ chuyển đổi </div>
@@ -15,52 +18,56 @@
         <q-card flat>
             <q-card-section class="">
                 <div class="text-bold q-pa-md text-subtitle2">Bảng hoạt động </div>
-                <TableActivity :loading="loading" :list="dataTableActitivy.data" :key="keyTableActivity"
+                <TableActivity :loading="loadingTableActivity" :list="dataTableActitivy.data" :key="keyTableActivity"
                     :isQueryEmployer="dataTableActitivy.isQueryEmployer" :isQueryJob="dataTableActitivy.isQueryJob">
                 </TableActivity>
             </q-card-section>
         </q-card>
-        <q-page-sticky class="bg-grey-1" expand position="top">
-            <q-card flat class="q-pa-xs bg-grey-1 row q-gutter-md">
-                <div>
-                    <q-select style="width: 300px;" v-model="selectedEmployer" :options="listEmployerShow"
+        <q-page-sticky class="bg-grey-3 q-pa-sm  row justify-between" expand   position="top">
+            <!-- <q-card flat class=" "> -->
+                <div class="row q-ml-xl q-gutter-md">
+
+                    <div>
+                        <q-select style="width: 300px;" v-model="selectedEmployer" :options="listEmployerShow"
                         :option-value="opt => Object(opt) === opt && opt != '' ? opt : ''"
                         :option-label="opt => Object(opt) === opt && opt != '' ? opt.info.name : 'Tất cả'"
                         color="deep-orange" label="Nhân viên" outlined hide-selected fill-input input-debounce="0" use-input
                         @filter="filterFnEmployer" dense placeholder="Tìm theo kí tự trên bảng"></q-select>
-                </div>
-                <div>
-
-                    <q-select style="width: 300px;" v-model="selectedJob" :options="listJobShow"
+                    </div>
+                    <div>
+                        
+                        <q-select style="width: 300px;" v-model="selectedJob" :options="listJobShow"
                         :option-value="opt => Object(opt) === opt ? opt : null"
                         :option-label="opt => Object(opt) === opt ? opt.info.name : 'Tất cả'" color="deep-orange" outlined
                         label="Công việc" hide-selected fill-input input-debounce="0" use-input @filter="filterFnJob" dense
                         placeholder="Tìm theo kí tự trên bảng"></q-select>
+                    </div>
                 </div>
-                <div>
+                <div class=" q-mr-xl">
                     <VueDatePicker v-model="date" range :format="formatDate" />
                 </div>
 
 
 
-            </q-card>
+            <!-- </q-card> -->
         </q-page-sticky>
     </div>
 </template>
 <script>
 import { getJobsNameOfCompany } from "../../apis/job";
-import { getCandidateFunnel, getCountAllStatusDevideToEmployee, getListStatistic } from "../../apis/statistic"
+import { getCandidateFunnel, getCountAllStatus, getListStatistic } from "../../apis/statistic"
 
 import CandidateFunnel from "../../components/Statistic/CandidateFunnel.vue";
 import Employer from "./Statistic/Employer.vue"
 import { getAllEmployeeOfCompany } from '../../apis/user';
 import TableActivity from "./Statistic/TableActivity.vue";
 import Drawer from "../../layouts/Drawer.vue";
+import StatusAmount from "./Statistic/StatusAmount.vue";
 
 
 export default {
     components: {
-        Employer, TableActivity, CandidateFunnel
+        Employer, TableActivity, CandidateFunnel, StatusAmount
     },
 
     data() {
@@ -98,7 +105,18 @@ export default {
                 countOffered: 0,
                 countTurnIn: 0,
             },
-            loading: true,
+            loadingTableActivity: true,
+            loadingStatusAmount: true,
+            keyStatusAmount: 0,
+            statusAmountData: {
+                countTurnIn: 0,
+                countApproved: 0,
+                countInterview: 0,
+                countOffered: 0,
+                countGetHired: 0,
+                countNotQualify: 0,
+                countRejectByUser: 0
+            }
 
         }
     },
@@ -116,25 +134,39 @@ export default {
     },
     created() {
         this.$emit("update:layout", Drawer)
-        setTimeout(()=>{
+        setTimeout(() => {
             this.visiblePage = true;
-        },0)
+        }, 0)
         this.init();
     },
     methods: {
         reloadStatistic() {
             this.getCandidateFunnelFunc();
-            this.getListStatisticFunc()
+            this.getListStatisticFunc();
+            this.getCountAllStatusFunc();
+        },
+        getCountAllStatusFunc() {
+            this.loadingStatusAmount = true;
+            this.keyStatusAmount++;
+            let checkSeletecedEmployer = this.selectedEmployer.info.name !== this.allFormatInput.info.name
+            let checkSeletecedJob = this.selectedJob.info.name !== this.allFormatInput.info.name
+            getCountAllStatus({ from: this.date[0], to: this.date[1], employerEmail: checkSeletecedEmployer ? this.selectedEmployer.email : "", jobName: checkSeletecedJob ? this.selectedJob.info.name : "" }).then(data => {
+                if (data) {
+                    this.statusAmountData = data;
+                    this.loadingStatusAmount = false;
+                    this.keyStatusAmount++;
+                }
+            })
         },
         getListStatisticFunc() {
-            this.loading = true;
+            this.loadingTableActivity = true;
             this.keyTableActivity++;
             let checkSeletecedEmployer = this.selectedEmployer.info.name !== this.allFormatInput.info.name
             let checkSeletecedJob = this.selectedJob.info.name !== this.allFormatInput.info.name
             getListStatistic({ from: this.date[0], to: this.date[1], employerEmail: checkSeletecedEmployer ? this.selectedEmployer.email : "", jobName: checkSeletecedJob ? this.selectedJob.info.name : "" }).then(data => {
                 if (data) {
                     this.dataTableActitivy = data;
-                    this.loading = false;
+                    this.loadingTableActivity = false;
                     this.keyTableActivity++;
                 }
             })
@@ -225,10 +257,7 @@ export default {
 
             })
         },
-        // init() {
-        //     getCountAllStatusDevideToEmployee({ from: this.from, to: this.to }).then(data => {
-        //     });
-        // }
+  
     },
 
 }

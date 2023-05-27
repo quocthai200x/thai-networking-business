@@ -1,9 +1,9 @@
 import axios from "@/axios"
 
 
-export const getCountAllStatusDevideToEmployee = async ({from, to}) =>{
+export const getCountAllStatus =async ({from, to, jobName, employerEmail}) =>{
     try {
-        let res = await axios.get(`/statistic?from=${from}&to=${to}`)
+        let res = await axios.get(`/statistic?from=${from}&to=${to}&jobName=${jobName}&employerEmail=${employerEmail}`)
         if(res.status == 200){
             return res.data 
         }else{
