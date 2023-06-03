@@ -1,10 +1,30 @@
 <template>
     <div v-if="visiblePage" class="q-my-md">
         <div>
-            <StatusAmount :key="keyStatusAmount" :loading="loadingStatusAmount" :statusAmountData="statusAmountData"></StatusAmount>
+            <StatusAmount :key="keyStatusAmount" :loading="loadingStatusAmount" :statusAmountData="statusAmountData">
+            </StatusAmount>
         </div>
         <q-card flat>
-            <q-card-section class="">
+            <q-card-section class="q-mb-md">
+                <div class="text-bold q-pa-md text-subtitle2">Sự thay đổi trong số lượng ứng viên</div>
+
+                <div class="row">
+                    <div class="col-4">
+                        <PieChart :key="keyPieChartCreatedBy" :loading="loadingPieChartCreatedBy"
+                            :created-by-company="pieChartCreatedByData.createdByCompany"
+                            :created-by-user="pieChartCreatedByData.createdByUser"></PieChart>
+                    </div>
+                    <div class="col-8">
+                        COL 8
+                    </div>
+                </div>
+            </q-card-section>
+        </q-card>
+
+
+
+        <q-card flat>
+            <q-card-section class="q-mb-md">
 
                 <div class="text-bold q-pa-md text-subtitle2">Tỉ lệ chuyển đổi </div>
 
@@ -15,6 +35,8 @@
             </q-card-section>
         </q-card>
 
+
+
         <q-card flat>
             <q-card-section class="">
                 <div class="text-bold q-pa-md text-subtitle2">Bảng hoạt động </div>
@@ -23,29 +45,29 @@
                 </TableActivity>
             </q-card-section>
         </q-card>
-        <q-page-sticky class="bg-grey-3 q-pa-sm  row justify-between" expand   position="top">
+        <q-page-sticky class="bg-grey-3 q-pa-sm  row justify-between" expand position="top">
             <!-- <q-card flat class=" "> -->
-                <div class="row q-ml-xl q-gutter-md">
+            <div class="row q-ml-xl q-gutter-md">
 
-                    <div>
-                        <q-select style="width: 300px;" v-model="selectedEmployer" :options="listEmployerShow"
+                <div>
+                    <q-select style="width: 300px;" v-model="selectedEmployer" :options="listEmployerShow"
                         :option-value="opt => Object(opt) === opt && opt != '' ? opt : ''"
                         :option-label="opt => Object(opt) === opt && opt != '' ? opt.info.name : 'Tất cả'"
                         color="deep-orange" label="Nhân viên" outlined hide-selected fill-input input-debounce="0" use-input
                         @filter="filterFnEmployer" dense placeholder="Tìm theo kí tự trên bảng"></q-select>
-                    </div>
-                    <div>
-                        
-                        <q-select style="width: 300px;" v-model="selectedJob" :options="listJobShow"
+                </div>
+                <div>
+
+                    <q-select style="width: 300px;" v-model="selectedJob" :options="listJobShow"
                         :option-value="opt => Object(opt) === opt ? opt : null"
                         :option-label="opt => Object(opt) === opt ? opt.info.name : 'Tất cả'" color="deep-orange" outlined
                         label="Công việc" hide-selected fill-input input-debounce="0" use-input @filter="filterFnJob" dense
                         placeholder="Tìm theo kí tự trên bảng"></q-select>
-                    </div>
                 </div>
-                <div class=" q-mr-xl">
-                    <VueDatePicker v-model="date" range :format="formatDate" />
-                </div>
+            </div>
+            <div class=" q-mr-xl">
+                <VueDatePicker v-model="date" range :format="formatDate" />
+            </div>
 
 
 
@@ -55,7 +77,7 @@
 </template>
 <script>
 import { getJobsNameOfCompany } from "../../apis/job";
-import { getCandidateFunnel, getCountAllStatus, getListStatistic } from "../../apis/statistic"
+import { getCandidateFunnel, getCountAllStatus, getListStatistic, getCreatedByCount } from "../../apis/statistic"
 
 import CandidateFunnel from "../../components/Statistic/CandidateFunnel.vue";
 import Employer from "./Statistic/Employer.vue"
@@ -63,11 +85,11 @@ import { getAllEmployeeOfCompany } from '../../apis/user';
 import TableActivity from "./Statistic/TableActivity.vue";
 import Drawer from "../../layouts/Drawer.vue";
 import StatusAmount from "./Statistic/StatusAmount.vue";
-
+import PieChart from "../../components/Statistic/PieChart.vue";
 
 export default {
     components: {
-        Employer, TableActivity, CandidateFunnel, StatusAmount
+        Employer, TableActivity, CandidateFunnel, StatusAmount, PieChart
     },
 
     data() {
@@ -116,6 +138,12 @@ export default {
                 countGetHired: 0,
                 countNotQualify: 0,
                 countRejectByUser: 0
+            },
+            loadingPieChartCreatedBy: true,
+            keyPieChartCreatedBy: 0,
+            pieChartCreatedByData: {
+                createdByUser: 0,
+                createdByCompany: 0
             }
 
         }
@@ -144,6 +172,21 @@ export default {
             this.getCandidateFunnelFunc();
             this.getListStatisticFunc();
             this.getCountAllStatusFunc();
+            this.getPieChartCreatedByFunc();
+        },
+
+        getPieChartCreatedByFunc() {
+            this.loadingPieChartCreatedBy = true;
+            this.keyPieChartCreatedBy++;
+            let checkSeletecedEmployer = this.selectedEmployer.info.name !== this.allFormatInput.info.name
+            let checkSeletecedJob = this.selectedJob.info.name !== this.allFormatInput.info.name
+            getCreatedByCount({ from: this.date[0], to: this.date[1], employerEmail: checkSeletecedEmployer ? this.selectedEmployer.email : "", jobName: checkSeletecedJob ? this.selectedJob.info.name : "" }).then(data => {
+                if (data) {
+                    this.pieChartCreatedByData = data;
+                    this.loadingPieChartCreatedBy = false;
+                    this.keyPieChartCreatedBy++;
+                }
+            })
         },
         getCountAllStatusFunc() {
             this.loadingStatusAmount = true;
@@ -257,7 +300,7 @@ export default {
 
             })
         },
-  
+
     },
 
 }

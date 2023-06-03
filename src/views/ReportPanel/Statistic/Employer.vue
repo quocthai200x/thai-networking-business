@@ -1,5 +1,5 @@
 <template >
-    <q-card flat>
+    <q-card flat class="q-mb-md">
         <div class="row justify-between q-pa-md">
 
             <div class="text-bold  text-subtitle2">Thống kê theo nhân viên </div>
