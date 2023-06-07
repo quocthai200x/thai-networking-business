@@ -23,7 +23,10 @@ export const useJobStore = defineStore("job", {
                 languageRecruitment: [],
                 emailReceive: [],
                 outdate:"",
-                recruitmentProcess: []
+                recruitmentProcess: [],
+                targetScore: 5,
+                score: 1,
+
 
             },
             

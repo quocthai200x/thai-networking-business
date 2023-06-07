@@ -434,7 +434,7 @@ export default {
                 this.optionSelect.push({
                     name: "Phỏng vấn",
                     value: applicationDictionary.status.interview.value,
-                    inactive: this.application.status.value == applicationDictionary.status.approve.value
+                    inactive: this.application.status.value != applicationDictionary.status.approve.value
                 })
             } else {
                 // nút interview đc thành các vòng

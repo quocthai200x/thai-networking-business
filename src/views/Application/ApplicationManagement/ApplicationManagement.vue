@@ -3,7 +3,8 @@
             Bạn không có quyền đọc thông tin</i></div>
     <div v-if="!roleStore.settings.applierFunction.canWrite" class="text-caption text-capitalize text-negative"><i>**
             Bạn không có quyền sửa thông tin</i></div>
-    <q-card flat class="q-pa-md">
+    
+    <q-card flat class="q-pa-md q-mb-md">
         <q-card-section class="row">
             <div class="text-bold  text-h6">Danh sách ứng tuyển </div>
         </q-card-section>
@@ -188,6 +189,7 @@
 
         </q-dialog>
     </q-card>
+    <NotCloseTable></NotCloseTable>
 </template>
 <script>
 import { getApplicationByJobName, attachNewEmployee } from '../../../apis/application';
@@ -200,11 +202,13 @@ import { useUserStore } from '../../../stores/userStore';
 import { getAllEmployeeOfCompany } from "../../../apis/user"
 import CandidateCV from "../../../components/Candidate/CandidateCV.vue"
 import { useQuasar } from 'quasar'
+import NotCloseTable from './NotCloseTable.vue';
 
 export default {
     components: {
-        CandidateCV,
-    },
+    CandidateCV,
+    NotCloseTable
+},
     data() {
         let columns = [
 

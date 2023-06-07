@@ -14,6 +14,20 @@ export const getOne = async ({id}) =>{
     }
 }
 
+export const getNotClose = async () =>{
+    try {
+        let res = await axios.get(`/application/not-close`)
+        if(res.status == 200){
+            return res.data 
+        }else{
+            throw new Error(res.data)
+        }
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+
 
 export const attachNewEmployee = async({applicationId,newEmployeeHandle}) =>{
     try {

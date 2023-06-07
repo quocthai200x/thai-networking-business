@@ -21,7 +21,13 @@
             </q-card-section>
         </q-card>
 
+        <q-card flat>
+            <q-card-section class="q-mb-md">
 
+                <div class="text-bold q-pa-md text-subtitle2">Bảng xếp hạng </div>
+                <LeaderBoard :dataLeaderboard="leaderBoard" :key="keyLeaderBoard" :loading="loadingLeaderBoard"></LeaderBoard>
+            </q-card-section>
+        </q-card>
 
         <q-card flat>
             <q-card-section class="q-mb-md">
@@ -77,7 +83,7 @@
 </template>
 <script>
 import { getJobsNameOfCompany } from "../../apis/job";
-import { getCandidateFunnel, getCountAllStatus, getListStatistic, getCreatedByCount } from "../../apis/statistic"
+import { getCandidateFunnel, getCountAllStatus, getListStatistic, getCreatedByCount, getLeaderBoard } from "../../apis/statistic"
 
 import CandidateFunnel from "../../components/Statistic/CandidateFunnel.vue";
 import Employer from "./Statistic/Employer.vue"
@@ -86,10 +92,11 @@ import TableActivity from "./Statistic/TableActivity.vue";
 import Drawer from "../../layouts/Drawer.vue";
 import StatusAmount from "./Statistic/StatusAmount.vue";
 import PieChart from "../../components/Statistic/PieChart.vue";
+import LeaderBoard from "./Statistic/LeaderBoard.vue";
 
 export default {
     components: {
-        Employer, TableActivity, CandidateFunnel, StatusAmount, PieChart
+        Employer, TableActivity, CandidateFunnel, StatusAmount, PieChart, LeaderBoard
     },
 
     data() {
@@ -144,7 +151,11 @@ export default {
             pieChartCreatedByData: {
                 createdByUser: 0,
                 createdByCompany: 0
-            }
+            },
+            leaderBoard: [],
+            keyLeaderBoard: 0,
+            loadingLeaderBoard: true,
+
 
         }
     },
@@ -173,8 +184,22 @@ export default {
             this.getListStatisticFunc();
             this.getCountAllStatusFunc();
             this.getPieChartCreatedByFunc();
+            this.getLeaderBoardFunc();
         },
+        getLeaderBoardFunc() {
+            this.loadingLeaderBoard = true;
+            this.keyLeaderBoard++;
+            let checkSeletecedEmployer = this.selectedEmployer.info.name !== this.allFormatInput.info.name
+            let checkSeletecedJob = this.selectedJob.info.name !== this.allFormatInput.info.name
+            getLeaderBoard({ from: this.date[0], to: this.date[1], employerEmail: checkSeletecedEmployer ? this.selectedEmployer.email : "", jobName: checkSeletecedJob ? this.selectedJob.info.name : "" }).then(data => {
+                if (data) {
+                    this.leaderBoard = data;
 
+                }
+                this.loadingLeaderBoard = false;
+                this.keyLeaderBoard++;
+            })
+        },
         getPieChartCreatedByFunc() {
             this.loadingPieChartCreatedBy = true;
             this.keyPieChartCreatedBy++;
@@ -183,9 +208,9 @@ export default {
             getCreatedByCount({ from: this.date[0], to: this.date[1], employerEmail: checkSeletecedEmployer ? this.selectedEmployer.email : "", jobName: checkSeletecedJob ? this.selectedJob.info.name : "" }).then(data => {
                 if (data) {
                     this.pieChartCreatedByData = data;
-                    this.loadingPieChartCreatedBy = false;
-                    this.keyPieChartCreatedBy++;
                 }
+                this.loadingPieChartCreatedBy = false;
+                this.keyPieChartCreatedBy++;
             })
         },
         getCountAllStatusFunc() {
@@ -196,9 +221,9 @@ export default {
             getCountAllStatus({ from: this.date[0], to: this.date[1], employerEmail: checkSeletecedEmployer ? this.selectedEmployer.email : "", jobName: checkSeletecedJob ? this.selectedJob.info.name : "" }).then(data => {
                 if (data) {
                     this.statusAmountData = data;
-                    this.loadingStatusAmount = false;
-                    this.keyStatusAmount++;
                 }
+                this.loadingStatusAmount = false;
+                this.keyStatusAmount++;
             })
         },
         getListStatisticFunc() {
@@ -209,9 +234,10 @@ export default {
             getListStatistic({ from: this.date[0], to: this.date[1], employerEmail: checkSeletecedEmployer ? this.selectedEmployer.email : "", jobName: checkSeletecedJob ? this.selectedJob.info.name : "" }).then(data => {
                 if (data) {
                     this.dataTableActitivy = data;
-                    this.loadingTableActivity = false;
-                    this.keyTableActivity++;
+
                 }
+                this.loadingTableActivity = false;
+                this.keyTableActivity++;
             })
         },
         getCandidateFunnelFunc() {
@@ -221,8 +247,9 @@ export default {
                 if (data) {
                     // console.log(data);
                     this.funnel = data
-                    this.keyFunnel++;
+                  
                 }
+                this.keyFunnel++;
             })
         },
         init() {
@@ -258,11 +285,11 @@ export default {
         },
         formatDate(date) {
             const dayFrom = date[0].getDate();
-            const monthFrom = date[0].getMonth() + 1;
+            const monthFrom = date[0].getMonth() - 3;
             const yearFrom = date[0].getFullYear();
 
             const dayTo = date[1].getDate();
-            const monthTo = date[1].getMonth() + 1;
+            const monthTo = date[1].getMonth() + 3;
             const yearTo = date[1].getFullYear();
 
             return `${dayFrom}/${monthFrom}/${yearFrom} - ${dayTo}/${monthTo}/${yearTo}  `;

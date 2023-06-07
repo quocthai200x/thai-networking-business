@@ -179,12 +179,11 @@ export default {
             myInitialPagination: {
                 rowsPerPage: 10
             },
-            loading: this.loading,
+           
             filter: "",
-            list: this.list,
+           
             columns,
-            isQueryEmployer: this.isQueryEmployer,
-            isQueryJob: this.isQueryJob
+          
         }
     },
 

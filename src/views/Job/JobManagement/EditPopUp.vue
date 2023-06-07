@@ -55,22 +55,22 @@
                                     <div class="q-pr-xs">
                                         <div>{{
                                             location.address + ", " + location.ward + ", " +
-                                                location.district
-                                                + ", " + location.province
+                                            location.district
+                                            + ", " + location.province
                                         }}</div>
                                     </div>
                                 </div>
                                 <div class="col-2">
                                     <div class=" q-gutter-xs rounded-borders justify-end row">
                                         <div>
-                                            <q-btn @click="showMap(index)" size="sm" color="light-green-3" icon="map"
-                                                dense unelevated></q-btn>
+                                            <q-btn @click="showMap(index)" size="sm" color="light-green-3" icon="map" dense
+                                                unelevated></q-btn>
                                             <q-tooltip anchor="center middle" self="center middle">Xem bản
                                                 đồ</q-tooltip>
                                         </div>
                                         <div>
-                                            <q-btn @click="editLocation(index)" size="sm" color="light-blue-3"
-                                                icon="edit" dense unelevated></q-btn>
+                                            <q-btn @click="editLocation(index)" size="sm" color="light-blue-3" icon="edit"
+                                                dense unelevated></q-btn>
                                             <q-tooltip anchor="center middle" self="center middle">Chỉnh
                                                 sửa</q-tooltip>
                                         </div>
@@ -131,69 +131,26 @@
         <q-card-section>
             <LanguageCardVue></LanguageCardVue>
         </q-card-section>
-        <!-- <q-card-section>
-            <div class="text-bold text-capitalize q-px-md">
-                            <div class="q-mb-sm">
-                                Quy trình phỏng vấn <strong class="text-negative">*</strong>
-                            </div>
-                            </div>
-            <q-card-section v-if="jobStore.form.recruitmentProcess.length != 0" class="q-gutter-sm">
-                
-                <div class="q-ml-md row items-center q-gutter-sm"
-                    v-for="(process, index) in jobStore.form.recruitmentProcess" :key="index + '-process'">
-                    <div class="row fit">
-                        <div class="col-2">Vòng 3.{{ index+ 1 }}</div>
-                        <div class="col-8">
-                            {{ process }}
-                        </div>
-                        <div class="row q-gutter-xs col-2 justify-end">
-                            <div>
-                                <q-btn @click="editProcess(index)" size="sm" color="light-blue-3" icon="edit" dense
-                                    unelevated></q-btn>
-                                <q-tooltip anchor="center middle" self="center middle">Chỉnh
-                                    sửa</q-tooltip>
-                            </div>
-                            <div>
-                                <q-btn @click="removeProcess(index)" size="sm" color="deep-orange-2" icon="backspace"
-                                    dense unelevated></q-btn>
-                                <q-tooltip anchor="center middle" self="center middle">Xóa </q-tooltip>
-                            </div>
-                        </div>
+        <q-card-section>
+            <div class="q-px-md row">
+                <div class="col-6">
+                    <div class="q-mr-md">
+                        <div class="text-bold text-capitalize q-mb-xs">Thiết lập trọng số</div>
+                        <i class="text-caption">*Trọng số giúp tính điểm mỗi khi tuyển được ứng viên thành công</i>
+                        <q-input color="deep-orange" dense type="number" outlined v-model="jobStore.form.score" />
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div>
+                        <div class="text-bold text-capitalize q-mb-xs">Thiết lập kỳ vọng đạt được</div>
+                        <i class="text-caption">*Tổng số điểm kỳ vọng đạt được</i>
+                        <q-input color="deep-orange" dense type="number" outlined v-model="jobStore.form.targetScore" />
                     </div>
                 </div>
 
-            </q-card-section>
-            <q-card-section>
+            </div>
+        </q-card-section>
 
-                <q-btn class="q-mb-md" @click="addRound" color="deep-orange" size="12px" unelevated label="Thêm vòng">
-                </q-btn>
-            </q-card-section>
-            <q-dialog v-model="isShowDialog">
-                <q-card>
-                    <q-card-section>
-                        <div class=" text-capitalize text-h6 text-bold">Sửa quy trình 3.{{ indexChoose+ 1 }}</div>
-                    </q-card-section>
-                    <q-card-section>
-
-                        <div>
-                            <div class=" text-capitalize">
-                                <i>
-                                    Mô tả tiến trình<span class="text-negative">*</span>
-
-                                </i>
-                            </div>
-                            <q-input outlined color="deep-orange" style="width: 400px;"
-                                v-model="jobStore.form.recruitmentProcess[indexChoose]" />
-                        </div>
-                    </q-card-section>
-
-                    <q-card-actions align="right">
-                        <q-btn flat label="Đóng" color="negative" v-close-popup />
-                    </q-card-actions>
-                </q-card>
-            </q-dialog>
-
-        </q-card-section> -->
     </q-card>
     <q-dialog v-model="isShowMap">
         <q-card>
@@ -215,7 +172,6 @@
     </q-dialog>
     <DialogAddressVue v-model:isShowAddAddress="isShowAddAddress" v-model:isShowEditAddress="isShowEditAddress"
         v-model:indexToDialog="indexToDialog"></DialogAddressVue>
-
 </template>
 <script>
 
@@ -292,12 +248,12 @@ export default {
         addRound() {
             this.jobStore.form.recruitmentProcess.push("Hãy điền thông tin của tiến trình này")
         },
-        editProcess(index){
+        editProcess(index) {
             this.isShowDialog = true;
             this.indexChoose = index;
         },
-        removeProcess(index){
-            this.jobStore.form.recruitmentProcess.splice(index,1)
+        removeProcess(index) {
+            this.jobStore.form.recruitmentProcess.splice(index, 1)
         },
 
         optionsFn(date) {

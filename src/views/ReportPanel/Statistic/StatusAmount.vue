@@ -162,8 +162,8 @@ export default {
     },
     data() {
         return {
-            statusAmountData: this.statusAmountData,
-            loading: this.loading,
+         
+           
         }
     }
 }

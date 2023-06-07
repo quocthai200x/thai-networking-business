@@ -149,7 +149,7 @@
                     </q-card-section>
                 </q-card>
             </q-step>
-            <q-step :name="2" prefix="2" title="Thiết lập quy trình tuyển dụng">
+            <q-step :name="2" prefix="2" title="Cài đặt tin tuyển dụng">
                 <RecruitmentProcessCardVue></RecruitmentProcessCardVue>
             </q-step>
             <q-step :name="3" prefix="3" title="Kiểm thử">
@@ -158,10 +158,10 @@
             <template v-slot:navigation>
                 <q-stepper-navigation>
                     <div class="q-pa-lg row justify-end">
-                        <q-btn v-if="step > 1" flat color="deep-orange" @click="$refs.stepper.previous()"
-                            label="Quay lại" class="q-ml-sm" />
+                        <q-btn v-if="step > 1" flat color="negative" @click="$refs.stepper.previous()"
+                            label="Quay lại" class="q-ml-sm q-mr-sm " />
                         <q-btn :disable="this.step === 3 && !roleStore.settings.recruitmentFunction.canWrite" unelevated
-                            @click="goToNextStep()" color="deep-orange" :label="step === 3 ? 'Hoàn tất' : 'Tiếp tục'" />
+                            @click="goToNextStep()" color="negative" :label="step === 3 ? 'Hoàn tất' : 'Tiếp tục'" />
                     </div>
                 </q-stepper-navigation>
             </template>
