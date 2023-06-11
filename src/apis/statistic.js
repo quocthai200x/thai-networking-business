@@ -85,3 +85,18 @@ export const getLeaderBoard = async ({from, to, jobName, employerEmail}) =>{
     }
 }
 
+
+export const getAverageTime = async ({from, to, jobName, employerEmail}) =>{
+    try {
+        let res = await axios.get(`/statistic/get-average-time?from=${from}&to=${to}&jobName=${jobName}&employerEmail=${employerEmail}`)
+        if(res.status == 200){
+            return res.data 
+        }else{
+            throw new Error(res.data)
+        }
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+

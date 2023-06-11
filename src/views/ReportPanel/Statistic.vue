@@ -23,11 +23,31 @@
 
         <q-card flat>
             <q-card-section class="q-mb-md">
+                <div class="text-bold q-pa-md text-subtitle2">Thời gian trung bình theo nhân viên </div>
+                <MultiSeriesColumn :average-time-per-employee="avgTimeData.averageTimePerEmployee" :key="keyAvgTimeData"
+                    :loading="loadingAvgTimeData"></MultiSeriesColumn>
 
-                <div class="text-bold q-pa-md text-subtitle2">Bảng xếp hạng </div>
-                <LeaderBoard :dataLeaderboard="leaderBoard" :key="keyLeaderBoard" :loading="loadingLeaderBoard"></LeaderBoard>
             </q-card-section>
         </q-card>
+        <q-card flat>
+            <q-card-section class="q-mb-md">
+                <div class="text-bold q-pa-md text-subtitle2">Thời gian trung bình theo công việc </div>
+                <MultiSeriesColumn :average-time-per-job="avgTimeData.averageTimePerJob" :key="keyAvgTimeData"
+                    :loading="loadingAvgTimeData"></MultiSeriesColumn>
+
+            </q-card-section>
+        </q-card>
+
+        <q-card flat>
+            <q-card-section class="q-mb-md">
+
+                <div class="text-bold q-pa-md text-subtitle2">Bảng xếp hạng </div>
+                <LeaderBoard :dataLeaderboard="leaderBoard" :key="keyLeaderBoard" :loading="loadingLeaderBoard">
+                </LeaderBoard>
+            </q-card-section>
+        </q-card>
+
+
 
         <q-card flat>
             <q-card-section class="q-mb-md">
@@ -83,7 +103,7 @@
 </template>
 <script>
 import { getJobsNameOfCompany } from "../../apis/job";
-import { getCandidateFunnel, getCountAllStatus, getListStatistic, getCreatedByCount, getLeaderBoard } from "../../apis/statistic"
+import { getCandidateFunnel, getCountAllStatus, getListStatistic, getCreatedByCount, getLeaderBoard, getAverageTime } from "../../apis/statistic"
 
 import CandidateFunnel from "../../components/Statistic/CandidateFunnel.vue";
 import Employer from "./Statistic/Employer.vue"
@@ -93,10 +113,11 @@ import Drawer from "../../layouts/Drawer.vue";
 import StatusAmount from "./Statistic/StatusAmount.vue";
 import PieChart from "../../components/Statistic/PieChart.vue";
 import LeaderBoard from "./Statistic/LeaderBoard.vue";
+import MultiSeriesColumn from "../../components/Statistic/MultiSeriesColumn.vue";
 
 export default {
     components: {
-        Employer, TableActivity, CandidateFunnel, StatusAmount, PieChart, LeaderBoard
+        Employer, TableActivity, CandidateFunnel, StatusAmount, PieChart, LeaderBoard, MultiSeriesColumn
     },
 
     data() {
@@ -156,6 +177,13 @@ export default {
             keyLeaderBoard: 0,
             loadingLeaderBoard: true,
 
+            avgTimeData: {
+                averageTimePerEmployee: [],
+                averageTimePerJob: [],
+            },
+            loadingAvgTimeData: true,
+            keyAvgTimeData: 0,
+
 
         }
     },
@@ -185,6 +213,21 @@ export default {
             this.getCountAllStatusFunc();
             this.getPieChartCreatedByFunc();
             this.getLeaderBoardFunc();
+            this.getAvgTimeDataFunc();
+        },
+        getAvgTimeDataFunc() {
+            this.loadingAvgTimeData = true;
+            this.keyAvgTimeData++;
+            let checkSeletecedEmployer = this.selectedEmployer.info.name !== this.allFormatInput.info.name
+            let checkSeletecedJob = this.selectedJob.info.name !== this.allFormatInput.info.name
+            getAverageTime({ from: this.date[0], to: this.date[1], employerEmail: checkSeletecedEmployer ? this.selectedEmployer.email : "", jobName: checkSeletecedJob ? this.selectedJob.info.name : "" }).then(data => {
+                if (data) {
+                    this.avgTimeData = data;
+
+                }
+                this.loadingAvgTimeData = false;
+                this.keyAvgTimeData++;
+            })
         },
         getLeaderBoardFunc() {
             this.loadingLeaderBoard = true;
@@ -247,7 +290,7 @@ export default {
                 if (data) {
                     // console.log(data);
                     this.funnel = data
-                  
+
                 }
                 this.keyFunnel++;
             })
