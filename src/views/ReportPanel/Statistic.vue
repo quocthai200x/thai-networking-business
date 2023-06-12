@@ -23,16 +23,18 @@
 
         <q-card flat>
             <q-card-section class="q-mb-md">
-                <div class="text-bold q-pa-md text-subtitle2">Thời gian trung bình theo nhân viên </div>
-                <MultiSeriesColumn :average-time-per-employee="avgTimeData.averageTimePerEmployee" :key="keyAvgTimeData"
+
+                <MultiSeriesColumn title="Thời gian trung bình theo nhân viên "
+                    :average-time-per-employee="avgTimeData.averageTimePerEmployee" :key="keyAvgTimeData"
                     :loading="loadingAvgTimeData"></MultiSeriesColumn>
 
             </q-card-section>
         </q-card>
         <q-card flat>
             <q-card-section class="q-mb-md">
-                <div class="text-bold q-pa-md text-subtitle2">Thời gian trung bình theo công việc </div>
-                <MultiSeriesColumn :average-time-per-job="avgTimeData.averageTimePerJob" :key="keyAvgTimeData"
+
+                <MultiSeriesColumn title="Thời gian trung bình theo công việc"
+                    :average-time-per-job="avgTimeData.averageTimePerJob" :key="keyAvgTimeData"
                     :loading="loadingAvgTimeData"></MultiSeriesColumn>
 
             </q-card-section>
@@ -41,7 +43,7 @@
         <q-card flat>
             <q-card-section class="q-mb-md">
 
-                <div class="text-bold q-pa-md text-subtitle2">Bảng xếp hạng </div>
+
                 <LeaderBoard :dataLeaderboard="leaderBoard" :key="keyLeaderBoard" :loading="loadingLeaderBoard">
                 </LeaderBoard>
             </q-card-section>
