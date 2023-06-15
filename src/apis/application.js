@@ -59,10 +59,10 @@ export const getApplicationByJobName = async ({jobName}) =>{
 
 
 
-export const invite = async ({jobName, candidateEmail})=>{
+export const invite = async ({jobName, candidateEmail, employeeHandle})=>{
     try {
         let res = await axios.post('/application/invite', {
-            jobName, candidateEmail
+            jobName, candidateEmail, employeeHandle
         })
         if(res.status == 200){
             return res.data 

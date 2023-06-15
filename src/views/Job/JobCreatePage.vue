@@ -201,7 +201,6 @@ import SalaryCardVue from '../../components/Job/SalaryCard.vue'
 import SkillCardVue from '../../components/Job/SkillCard.vue'
 import LanguageCardVue from '../../components/Job/LanguageCard.vue'
 import { useQuasar, QSpinnerFacebook  } from 'quasar'
-
 import RecruitmentProcessCardVue from '../../components/Job/RecruitmentProcessCard.vue'
 import BenefitsSelect from '../../components/Job/BenefitsSelect.vue'
 import ReviewJobVue from '../../components/Job/ReviewJob.vue'
@@ -239,6 +238,7 @@ export default {
             roleStore: useRoleStore(),
             step: 1,
             levelOptions: [],
+
         }
     },
     watch: {
@@ -279,6 +279,7 @@ export default {
             this.date = this.$moment(new Date()).format("YYYY/MM/DD")
             // console.log(this.date)
 
+
         },
         showMap(index) {
 
@@ -305,7 +306,8 @@ export default {
             let hasCheck = true;
             if (this.step == 3) {
                 let saveObject = {
-                    ...this.jobStore.form
+                    ...this.jobStore.form,
+                    recruiter: this.jobStore.recruiter.map(item=> item.email),
                 }
                 saveObject.recruitmentProcess = this.jobStore.form.recruitmentProcess.map((element, index) => {
                     return ({

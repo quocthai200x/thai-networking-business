@@ -37,10 +37,12 @@
 import { getNotClose } from '../../../apis/application';
 import { useUserStore } from '../../../stores/userStore';
 import {roleDictionary} from "../../../assets/dictionary/role"
+import { useRoleStore } from '../../../stores/roleStore';
 
 export default {
     data() {
         let userStore = useUserStore();
+        let roleStore = useRoleStore();
         let columns = [
             {
                 name: 'Ứng viên',
@@ -92,7 +94,7 @@ export default {
             },
         ];
         let visibleColumns = ["Ứng viên", "Vị trí", "Nhân viên xử lý", "Trạng thái đơn", "Cập nhật lần cuối"];
-        if(roleDictionary.isEmployee(userStore.roleNumber)){
+        if(roleDictionary.isEmployee(userStore.roleNumber) && !roleStore.settings.adminFunction.isAdmin){
            visibleColumns = ["Ứng viên", "Vị trí", "Trạng thái đơn", "Cập nhật lần cuối"];
         }
 

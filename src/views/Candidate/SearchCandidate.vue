@@ -171,8 +171,10 @@ import { provinceDictionary } from "../../assets/dictionary/location"
 
 
 import { invite } from "../../apis/application"
-import { getJobsNameOfCompany } from '../../apis/job'
+import { getJobsNameOfCompanyByEmployer } from '../../apis/job'
 import { useRoleStore } from '../../stores/roleStore'
+import { useUserStore } from '../../stores/userStore'
+
 import { useQuasar } from 'quasar'
 export default {
     data() {
@@ -191,6 +193,7 @@ export default {
         })
         return {
             $q: useQuasar(),
+            userStore: useUserStore(),
             roleStore: useRoleStore(),
             // avatarDefault: avatarDefault,
             limit: 20,
@@ -276,7 +279,7 @@ export default {
         },
         inviteCandidate(){
             this.data[this.indexChoose].isLoading = true
-            invite({jobName: this.jobSelected, candidateEmail: this.data[this.indexChoose].email}).then(data=>{
+            invite({jobName: this.jobSelected, candidateEmail: this.data[this.indexChoose].email, employeeHandle: this.userStore.email}).then(data=>{
                 if(data){
                     this.$q.notify({
                         message: `Mời ứng viên '${this.data[this.indexChoose].info.name}' vào công việc '${this.jobSelected}' thành công`,
@@ -304,7 +307,7 @@ export default {
         init() {
 
             // tổng kết từ link trước
-            getJobsNameOfCompany().then(data => {
+            getJobsNameOfCompanyByEmployer().then(data => {
                 if (data) {
                     data.forEach(element => {
                         this.listJobsName.push(element.info.name)

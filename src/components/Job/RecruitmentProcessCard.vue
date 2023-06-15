@@ -14,6 +14,18 @@
                     <q-input color="deep-orange" dense type="number" outlined v-model="jobStore.form.targetScore" />
 
                 </q-card-section>
+                <q-card-section>
+                    <div class="text-bold  text-h6">Thiết lập nhân viên xử lý</div>
+                    <!-- <i class="text-caption">*Tổng số điểm kỳ vọng đạt được</i> -->
+                    <!-- <q-input color="deep-orange" dense type="number" outlined v-model="jobStore.form.targetScore" /> -->
+                    <q-select :options="listEmployerShow" bg-color="white" outlined color="deep-orange" dense
+                        :option-value="opt => Object(opt) === opt && opt != '' ? opt.email : ''"
+                        :option-label="opt => Object(opt) === opt && opt != '' ? (opt.name +  ' ('+opt.email + ')') : 'Tất cả'" 
+                        multiple
+                        type="text" v-model="jobStore.recruiter" label="Nhân viên" input-debounce="0" @filter="filterFn"
+                        use-input />
+                </q-card-section>
+    
 
             </q-card>
         </div>
@@ -102,6 +114,7 @@
 </template>
 <script>
 import { useJobStore } from '../../stores/jobStore'
+import { getAllEmployeeOfCompany } from "../../apis/user"
 
 
 export default {
@@ -110,10 +123,39 @@ export default {
             infoProcess: '',
             isShowDialog: false,
             jobStore: useJobStore(),
-            indexChoose: -1
+            indexChoose: -1,
+            listEmployer: [],
+            listEmployerShow: [],
+        }
+    },
+    created() {
+        this.init();
+    },
+    watch:{
+        "jobStore.recruiter"(newVal, oldVal){
+            console.log(newVal)
         }
     },
     methods: {
+        filterFn(val, update) {
+            update(() => {
+                if (val === '') {
+                    this.listEmployerShow = this.listEmployer
+                }
+                else {
+                    this.listEmployerShow = this.listEmployer.filter(v => (v.name.includes(val) || v.email.includes(val)))
+                }
+            })
+        },
+        init() {
+            getAllEmployeeOfCompany().then(data => {
+                if (data) {
+                    this.listEmployer = data.map(employer => { return { email: employer.email, name: employer.info.name } });
+                    this.listEmployerShow = this.listEmployer;
+                }
+            })
+
+        },
         addRound() {
             this.jobStore.form.recruitmentProcess.push("Hãy điền thông tin của tiến trình này")
         },

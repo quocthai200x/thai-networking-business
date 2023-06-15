@@ -14,6 +14,20 @@ export const getJobsNameOfCompany = async () =>{
     }
 }
 
+export const getJobsNameOfCompanyByEmployer = async () =>{
+    try {
+        let res= await axios.get('/job/jobs-name-by-employer')
+        if(res.status == 200){
+            return res.data
+        }else{
+            throw new Error(res.data)
+        }
+    } catch (error) {
+        console.log(error)
+        
+    }
+}
+
 export const getCountJobByStatus = async () =>{
     try {
         let res= await axios.get('/job/status-count')
@@ -133,6 +147,21 @@ export const updateJob = async ({jobName, info}) =>{
     try {
         let res = await axios.put('/job', {
             jobName, info
+        })        
+        if(res.status == 200){
+            return res.data
+        }else{
+            throw new Error(res.data)
+        }
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+export const updateAttachEmployer = async ({jobName, recruiter}) =>{
+    try {
+        let res = await axios.put('/job/update-attach-employer', {
+            jobName, recruiter
         })        
         if(res.status == 200){
             return res.data

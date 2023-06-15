@@ -160,6 +160,14 @@
                             label="Tìm kiếm, xem các thông tin về ứng viên" keep-color />
                     </div>
                 </q-card-section>
+                <q-card-section>
+                    <div class="text-subtitle1">Cài đặt quản trị viên</div>
+                    <div>
+                        <q-toggle :disable='!roleStore.settings.systemFunction.canWriteRolePermission'
+                            v-model="form.settings.adminFunction.isAdmin" color="deep-orange"
+                            label="Mang danh là admin" keep-color />
+                    </div>
+                </q-card-section>
 
 
                 <q-card-actions align="right" class="text-negative">
@@ -213,6 +221,9 @@ export default {
         return {
             form: {
                 settings: {
+                    adminFunction: {
+                        isAdmin: false,
+                    },
                     recruitmentFunction: {
                         canRead: true,
                         canWrite: false
@@ -261,6 +272,24 @@ export default {
             if (!newValue) {
                 this.indexChoose = -1
 
+            }
+        },
+        "form.settings.adminFunction.isAdmin"(newValue) {
+            if (newValue) {
+                this.form.settings.recruitmentFunction.canRead = true;
+                this.form.settings.recruitmentFunction.canWrite = true;
+
+                this.form.settings.applierFunction.canWrite = true;
+                this.form.settings.applierFunction.canWrite = true;
+
+                this.form.settings.systemFunction.canRead = true;
+                this.form.settings.systemFunction.canWriteRolePermission = true;
+                this.form.settings.systemFunction.canWriteCompanyInfo = true;
+                this.form.settings.systemFunction.canWriteUserPermission = true;
+   
+       
+                this.form.settings.searchFunction.canSearch = true;
+                this.form.settings.statisticFunction.canReadStatistic = true;
             }
         },
         "form.settings.recruitmentFunction.canRead"(newValue) {
@@ -338,7 +367,7 @@ export default {
                         canSearch: true,
                     },
                     statisticFunction: {
-                        canReadStatistic : true,
+                        canReadStatistic: true,
                     }
                 },
                 name: "",
@@ -351,6 +380,9 @@ export default {
                         if (data) {
                             this.listRole[index].name = data.name
                             this.listRole[index].settings = data.settings
+                            if(data.name == this.roleStore.name){
+                                this.roleStore.settings = data.settings
+                            }
                             this.$q.notify({
                                 message: `Cập nhật '${data.name}' thành công `,
                                 color: 'green-6',

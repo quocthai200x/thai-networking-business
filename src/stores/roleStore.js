@@ -4,6 +4,9 @@ export const useRoleStore = defineStore("role", {
     state: () => {
         return {
             settings: {
+                adminFunction:{
+                    isAdmin: false,
+                },
                 recruitmentFunction: {
                     canRead: false,
                     canWrite: false

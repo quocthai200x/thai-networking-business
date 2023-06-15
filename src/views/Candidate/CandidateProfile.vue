@@ -338,12 +338,13 @@
     </q-dialog>
 </template>
 <script>
-import { getJobsNameOfCompany } from '../../apis/job'
+import { getJobsNameOfCompanyByEmployer } from '../../apis/job'
 import { searchCandidate } from '../../apis/search'
 import { getCandidate } from '../../apis/user'
 import DrawerVue from '../../layouts/Drawer.vue'
 import { useRoleStore } from '../../stores/roleStore'
 import { useSearchStore } from '../../stores/searchStore'
+import { useUserStore } from '../../stores/userStore'
 
 
 
@@ -361,6 +362,7 @@ export default {
             loading: false,
             isDataValid: false,
             searchStore: useSearchStore(),
+            userStore: useUserStore(),
             suggestCandidateList: [],
             roleStore: useRoleStore(),
             listJobsName: [],
@@ -380,7 +382,7 @@ export default {
             const [candidateData, suggestCandidate, listJobsName] = await Promise.all([
                 getCandidate({ userId: this.$route.query.id }),
                 searchCandidate({ text: this.searchStore.text, filter: this.searchStore.filter, limit: 5, pageNumber: 0 }),
-                getJobsNameOfCompany(),
+                getJobsNameOfCompanyByEmployer(),
             ])
             if (candidateData && suggestCandidate && listJobsName) {
                 this.userData = candidateData.userData;
@@ -416,7 +418,7 @@ export default {
         inviteCandidate() {
             if (this.indexChoose >= 0) {
                 this.suggestCandidateList[this.indexChoose].isLoading = true
-                invite({ jobName: this.jobSelected, candidateEmail: this.data[this.indexChoose].email }).then(data => {
+                invite({ jobName: this.jobSelected, candidateEmail: this.data[this.indexChoose].email, employeeHandle: this.userStore.email }).then(data => {
                     if (data) {
                         this.$q.notify({
                             message: `Mời ứng viên '${this.suggestCandidateList[this.indexChoose].info.name}' vào công việc '${this.jobSelected}' thành công`,
@@ -438,7 +440,7 @@ export default {
                 this.popUp = false;
             } else {
                 this.inviteUserLoading = true
-                invite({ jobName: this.jobSelected, candidateEmail: this.userData.email }).then(data => {
+                invite({ jobName: this.jobSelected, candidateEmail: this.userData.email, employeeHandle: this.userStore.email }).then(data => {
                     if (data) {
                         this.$q.notify({
                             message: `Mời ứng viên '${this.userData.info.name}' vào công việc '${this.jobSelected}' thành công`,

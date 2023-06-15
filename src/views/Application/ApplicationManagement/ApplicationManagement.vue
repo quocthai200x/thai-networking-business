@@ -193,7 +193,7 @@
 </template>
 <script>
 import { getApplicationByJobName, attachNewEmployee } from '../../../apis/application';
-import { getJobsNameOfCompany } from '../../../apis/job';
+import { getJobsNameOfCompanyByEmployer } from '../../../apis/job';
 import { applicationDictionary } from "../../../assets/dictionary/application"
 import Drawer from '../../../layouts/Drawer.vue';
 import { useCompanyStore } from '../../../stores/companyStore';
@@ -422,7 +422,7 @@ export default {
                     this.employeeSelected = this.listEmployee[0]
                 }
             })
-            getJobsNameOfCompany().then(data => {
+            getJobsNameOfCompanyByEmployer().then(data => {
                 if (data) {
                     data.forEach(element => {
                         this.listJobsName.push(element.info.name)
