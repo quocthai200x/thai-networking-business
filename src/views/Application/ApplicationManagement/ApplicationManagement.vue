@@ -3,7 +3,7 @@
             Bạn không có quyền đọc thông tin</i></div>
     <div v-if="!roleStore.settings.applierFunction.canWrite" class="text-caption text-capitalize text-negative"><i>**
             Bạn không có quyền sửa thông tin</i></div>
-    
+
     <q-card flat class="q-pa-md q-mb-md">
         <q-card-section class="row">
             <div class="text-bold  text-h6">Danh sách ứng tuyển </div>
@@ -159,11 +159,11 @@
 
                                 <q-select class="q-mb-md" style="width: 300px;" dense color="deep-orange" outlined
                                     v-model="employeeSelected" :options="listEmployee"
-                                    :option-value="opt => Object(opt) === opt && 'email' in opt ? opt : null"
-                                    :option-label="opt => Object(opt) === opt && 'email' in opt ? opt.info.name : '- Không có -'"
+                                    :option-value="opt => Object(opt) === opt && 'email' in opt && opt.email ? opt : null"
+                                    :option-label="opt => Object(opt) === opt && 'email' in opt && opt.email ? opt.info.name : '- Không có -'"
                                     emit-value map-options></q-select>
                                 <div class="text-bold">Thông tin nhân viên</div>
-                                <div class="row">
+                                <div class="row" v-if="employeeSelected.email">
                                     <div class="col-3">Nhân viên: </div>
                                     <div class="col-9">{{ employeeSelected.info.name }}</div>
                                     <div class="col-3">Email: </div>
@@ -172,7 +172,9 @@
                                     <div class="col-9">{{ employeeSelected.roleId.name }}</div>
 
                                 </div>
-
+                                <div class="row" v-else>
+                                    <div>Hãy cập nhật danh sách nhân viên có thể tuyển công việc này</div>
+                                </div>
                             </div>
                             <div class="row justify-end">
 
@@ -199,16 +201,16 @@ import Drawer from '../../../layouts/Drawer.vue';
 import { useCompanyStore } from '../../../stores/companyStore';
 import { useRoleStore } from '../../../stores/roleStore';
 import { useUserStore } from '../../../stores/userStore';
-import { getAllEmployeeOfCompany } from "../../../apis/user"
+import { getAllEmployeeOfCompany, getAllHandlerByJob } from "../../../apis/user"
 import CandidateCV from "../../../components/Candidate/CandidateCV.vue"
 import { useQuasar } from 'quasar'
 import NotCloseTable from './NotCloseTable.vue';
 
 export default {
     components: {
-    CandidateCV,
-    NotCloseTable
-},
+        CandidateCV,
+        NotCloseTable
+    },
     data() {
         let columns = [
 
@@ -288,7 +290,13 @@ export default {
         })
         return {
             $q: useQuasar(),
-            employeeSelected: {},
+            employeeSelected: {
+                email: "",
+                _id: "",
+                info: {
+                    name: "",
+                }
+            },
             popUp: false,
             roleStore: useRoleStore(),
             userStore: userStore,
@@ -311,9 +319,9 @@ export default {
     },
 
     watch: {
-        "employeeSelected"(newValue) {
-            console.log(newValue.email)
-        },
+        // "employeeSelected"(newValue) {
+        //     console.log(newValue.email)
+        // },
         "listApplication"(newValue, oldValue) {
             this.listApplicationShow = [...this.listApplication];
             this.initStatus();
@@ -366,6 +374,7 @@ export default {
             if (newValue != oldValue && this.listJobsName.includes(newValue)) {
                 this.$router.push({ path: '/application/management', query: { job: newValue } })
                 this.fetchApplicationByJob()
+                this.fetchAllHanlderByJob()
                 // console.log("hi")
 
             }
@@ -387,9 +396,18 @@ export default {
         resetChosenApplication() {
 
         },
+        fetchAllHanlderByJob() {
+            getAllHandlerByJob({jobName: this.jobSelected}).then(data => {
+                if (data) {
+                    console.log(data)
+                    this.listEmployee = data.filter(item => item.email != this.userStore.email)
+                    // this.employeeSelected = this.listEmployee[0]
+                }
+            })
+        },
         switchEmployeeHandle() {
-            console.log(this.chosenApplication._id)
-            console.log(this.employeeSelected.email)
+            // console.log(this.chosenApplication._id)
+            // console.log(this.employeeSelected.email)
             attachNewEmployee({ applicationId: this.chosenApplication._id, newEmployeeHandle: this.employeeSelected.email }).then(data => {
                 if (data) {
                     this.listApplication = this.listApplication.filter(item => item._id != data._id)
@@ -415,13 +433,6 @@ export default {
             this.chosenApplication = application
         },
         init() {
-            getAllEmployeeOfCompany().then(data => {
-                if (data) {
-                    // console.log(data)
-                    this.listEmployee = data.filter(item => item.email != this.userStore.email)
-                    this.employeeSelected = this.listEmployee[0]
-                }
-            })
             getJobsNameOfCompanyByEmployer().then(data => {
                 if (data) {
                     data.forEach(element => {
@@ -441,7 +452,7 @@ export default {
             if (this.jobSelected) {
                 getApplicationByJobName({ jobName: this.jobSelected }).then(data => {
                     if (data) {
-                        console.log(data)
+                        // console.log(data)
                         this.listApplication = data;
                     }
                 })

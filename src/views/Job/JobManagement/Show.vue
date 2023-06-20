@@ -11,7 +11,7 @@
             <q-table :pagination="myInitialPagination" :filter="filter" separator="vertical" flat :rows="data"
                 :columns="columns" row-key="name">
                 <template v-slot:header="props">
-                    <q-tr :props="props">
+                    <q-tr class="bg-grey-2" :props="props">
                         <q-th v-for="col in props.cols" :key="col.name" :props="props" class="">
                             <span class="text-bold text-subtitle2">
                                 {{ col.label }}
@@ -69,6 +69,11 @@
                                         unelevated></q-btn>
                                     <q-tooltip anchor="center middle" self="center middle">Copy </q-tooltip>
                                 </div>
+                                <div>
+                                    <q-btn @click="addHandler(props.row)" size="sm" color="green-4" icon="add" dense
+                                        unelevated></q-btn>
+                                    <q-tooltip anchor="center middle" self="center middle">Thêm nhân viên xử lý </q-tooltip>
+                                </div>
 
                             </div>
                         </q-td>
@@ -92,12 +97,66 @@
             </q-card>
 
         </q-dialog>
+        <q-dialog v-model="isAddHandler">
+            <q-card style="padding: 24px 12px 4px 12px;max-width: 80vw; max-height: 95vh;" flat>
+                <q-card-section>
+                    <div class="text-bold q-mb-md">Thêm nhân viên xử lý</div>
+
+
+                    <div class="column  justify-between">
+                        <div>
+
+
+                            <q-select class="q-mb-md" style="width: 300px;" dense color="deep-orange" outlined
+                                v-model="recruiterList" :options="optionEmployerListShow" multiple use-input
+                                @filter="filterFn"
+                                :option-value="opt => Object(opt) === opt && 'email' in opt && opt.email ? opt : null"
+                                :option-label="opt => Object(opt) === opt && 'email' in opt && opt.email ? opt.info.name : '- Không có -'"
+                                emit-value map-options></q-select>
+                            <div>
+                                <div class="text-bold q-mb-md">Danh sách </div>
+                                <q-list bordered class="rounded-borders" style="overflow-y: scroll; max-height: 300px;">
+                                    <q-item v-for="recruiter, index in recruiterList" :key="index">
+                                    <q-item-section top>
+                                        <q-item-label lines="1">
+                                            <span class="text-weight-medium">{{recruiter.info.name }}</span>
+                                        </q-item-label>
+                                        <q-item-label caption lines="1">
+                                           {{ recruiter.email }}
+                                        </q-item-label>
+                           
+                                    </q-item-section>
+
+                                    <q-item-section top side>
+                                        <div class="text-grey-8 q-gutter-xs">
+                                            <q-btn @click="deleteRecruiter(recruiter)" class="gt-xs" size="12px" flat dense round icon="delete" />
+                                        </div>
+                                    </q-item-section>
+                                    </q-item>
+                                </q-list>
+                            </div>
+                        </div>
+                        <div class="row q-gutter-md justify-end q-mt-md">
+                            <q-btn dense  @click="resetRecruiterListShow" flat color="black" label="Đóng" v-close-popup />
+                            <q-btn dense :disable="!roleStore.settings.recruitmentFunction.canWrite" @click="updateRecruiterList"
+                                flat color="negative" label="Cập nhật" v-close-popup />
+                        </div>
+                    </div>
+
+
+                </q-card-section>
+
+            </q-card>
+
+        </q-dialog>
 
     </div>
 </template>
 <script>
 import { useQuasar, QSpinnerFacebook } from 'quasar'
-import { getJobByStatus, updateJob, updateStatus } from "../../../apis/job"
+import { getJobByStatus, updateJob, updateStatus, getHandlerByJob, updateAttachEmployer } from "../../../apis/job"
+import { getAllEmployeeOfCompany } from "../../../apis/user"
+
 import { jobDictionary } from '../../../assets/dictionary/job'
 import { useJobStore } from '../../../stores/jobStore'
 import { useRoleStore } from '../../../stores/roleStore'
@@ -162,6 +221,7 @@ export default {
             roleStore: useRoleStore(),
             choosenEditIndex: -1,
             isEdit: false,
+            isAddHandler: false,
             jobStore: useJobStore(),
             filter: "",
             data: [],
@@ -170,38 +230,128 @@ export default {
             $q: useQuasar(),
             myInitialPagination: {
                 rowsPerPage: 10
-            }
+            },
+            optionEmployerList: [],
+            optionEmployerListShow: [],
+            recruiterList: [],
+            jobSelected: {
+
+            },
         }
     },
     created() {
-        this.getJobs()
+        this.getJobs();
+        this.getEmployer();
     },
     methods: {
+        deleteRecruiter(recruiter){
+            this.recruiterList = this.recruiterList.filter(recruiterItem => recruiterItem != recruiter)
+        },
+        filterFn(val, update) {
+            update(() => {
+                if (val === '') {
+                    this.optionEmployerListShow = this.optionEmployerList
+                }
+                else {
+                    this.optionEmployerListShow = this.optionEmployerList.filter(v => (v.email.includes(val) || v.info.name.includes(val)))
+                }
+            })
+        },
+        resetRecruiterListShow() {
+            this.jobSelected = {
+
+            };
+            this.recruiterList = [];
+
+        },
+        updateRecruiterList() {
+            // console.log(this.recruiterList);
+            // console.log(this.jobSelected.info.name)
+            let recruiter = this.recruiterList.map(recruiter => recruiter.email);
+            updateAttachEmployer({ jobName: this.jobSelected.info.name, recruiter: recruiter }).then(data => {
+                if (data) {
+                    console.log(data);
+                    this.$q.notify({
+                        message: `Đã cập nhật danh sách nhân viên xử lý của ${this.jobSelected.info.name} thành công`,
+                        color: 'green-6',
+                        position: "bottom-right",
+                        icon: 'check_circle',
+                    })
+                } else {
+                    this.$q.notify({
+                        message: `Đã cập nhật danh sách nhân viên xử lý của ${this.jobSelected.info.name} thất bại`,
+                        color: 'deep-orange',
+                        position: "bottom-right",
+                        icon: 'check_circle',
+                    })
+                }
+            })
+        },
+        getEmployer() {
+            getAllEmployeeOfCompany().then(data => {
+                if (data) {
+                    console.log(data);
+                    this.optionEmployerList = data.map(employer => {
+                        return {
+                            email: employer.email,
+                            info: employer.info,
+                        }
+                    });
+                    this.optionEmployerListShow = this.optionEmployerList;
+                }
+            })
+        },
+        addHandler(job) {
+            this.isAddHandler = true;
+            this.jobSelected = job;
+            getHandlerByJob({ jobName: job.info.name }).then(data => {
+                if (data) {
+                    this.recruiterList = data.recruiterAttached.map(employer => {
+                        return {
+                            email: employer.email,
+                            info: employer.info,
+                        }
+                    });
+                }
+            })
+        },
         saveToKeyBoard(job) {
             let today = new Date();
+
+
             let outdate = new Date(job.info.outdate)
             // console.log(job)
-            if (today <= outdate) {
-                const el = document.createElement('textarea');
-                el.value = LinkJobForRecruiter({jobName: job.info.name, companyId: this.companyStore._id, recruiter: this.userStore.email})
-                document.body.appendChild(el);
-                el.select();
-                document.execCommand('copy');
-                document.body.removeChild(el);
+            if (!job.recruiterAttached.includes(this.userStore._id)) {
                 this.$q.notify({
-                    message: `Đã lưu công việc ${job.info.name} vào keyboard thành công`,
-                    color: 'green-6',
-                    position: "bottom-right",
-                    icon: 'check_circle',
-                })
-            } else {
-                this.$q.notify({
-                    message: `Đã hết hạn cho công việc ${job.info.name}`,
+                    message: `Chưa được thêm vào danh sách tuyển dụng của ${job.info.name}`,
                     color: 'deep-orange',
                     position: "bottom-right",
                     icon: 'check_circle',
                 })
+            } else {
+                if (today <= outdate) {
+                    const el = document.createElement('textarea');
+                    el.value = LinkJobForRecruiter({ jobName: job.info.name, companyId: this.companyStore._id, recruiter: this.userStore.email })
+                    document.body.appendChild(el);
+                    el.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(el);
+                    this.$q.notify({
+                        message: `Đã lưu công việc ${job.info.name} vào keyboard thành công`,
+                        color: 'green-6',
+                        position: "bottom-right",
+                        icon: 'check_circle',
+                    })
+                } else {
+                    this.$q.notify({
+                        message: `Đã hết hạn cho công việc ${job.info.name}`,
+                        color: 'deep-orange',
+                        position: "bottom-right",
+                        icon: 'check_circle',
+                    })
+                }
             }
+
             // if(job.outdate)
             // console.log(job.info.name)
 

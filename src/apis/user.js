@@ -55,6 +55,21 @@ export const getAllEmployeeOfCompany = async () => {
     }
 }
 
+export const getAllHandlerByJob = async ({jobName}) => {
+    try {
+        let res = await axios.get(`/user/handler/${jobName}`)
+        if (res.status == 200) {
+            return res.data
+        } else {
+            throw new Error(res.data)
+        }
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+
+
 
 export const updateUserInfo = async (data) => {
     try {

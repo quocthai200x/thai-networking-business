@@ -14,6 +14,21 @@ export const getJobsNameOfCompany = async () =>{
     }
 }
 
+
+export const getHandlerByJob = async ({jobName}) =>{
+    try {
+        let res= await axios.get(`/job/recruiter-attached/${jobName}`)
+        if(res.status == 200){
+            return res.data
+        }else{
+            throw new Error(res.data)
+        }
+    } catch (error) {
+        console.log(error)
+        
+    }
+}
+
 export const getJobsNameOfCompanyByEmployer = async () =>{
     try {
         let res= await axios.get('/job/jobs-name-by-employer')
