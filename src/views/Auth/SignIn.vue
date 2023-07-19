@@ -22,8 +22,8 @@
                         <q-carousel-slide :name="1" class="column no-wrap">
                             <div class="block justify-center items-center q-mb-md ">
                                 <div class="flex justify-center items-center q-mb-md">
-                                    <q-img class="rounded-borders" rounded-borders fit="fill" :ratio="16 / 9"
-                                        width="200px" src="../../assets/images/login_banner_1.png"></q-img>
+                                    <q-img class="rounded-borders" rounded-borders fit="fill" :ratio="16 / 9" width="200px"
+                                        src="../../assets/images/login_banner_1.png"></q-img>
                                 </div>
                                 <div class="text-center text-subtitle2">
                                     <span>Giọng nói thành Văn bản</span>
@@ -36,8 +36,8 @@
                             </div>
                             <div class="block justify-center items-center  q-mb-md ">
                                 <div class="flex justify-center items-center q-mb-md">
-                                    <q-img class="rounded-borders" rounded-borders fit="fill" :ratio="16 / 9"
-                                        width="200px" src="../../assets/images/login_banner_2.png"></q-img>
+                                    <q-img class="rounded-borders" rounded-borders fit="fill" :ratio="16 / 9" width="200px"
+                                        src="../../assets/images/login_banner_2.png"></q-img>
                                 </div>
                                 <div class="text-center text-subtitle2">
                                     <span>Tất cả CV tại 1 nơi</span>
@@ -53,8 +53,8 @@
                         <q-carousel-slide :name="2" class="column no-wrap flex-center">
                             <div class="block justify-center items-center q-mb-md ">
                                 <div class="flex justify-center items-center q-mb-md">
-                                    <q-img class="rounded-borders" rounded-borders fit="fill" :ratio="16 / 9"
-                                        width="200px" src="../../assets/images/login_banner_3.png"></q-img>
+                                    <q-img class="rounded-borders" rounded-borders fit="fill" :ratio="16 / 9" width="200px"
+                                        src="../../assets/images/login_banner_3.png"></q-img>
                                 </div>
                                 <div class="text-center text-subtitle2">
                                     <span>Đánh giá và So sánh</span>
@@ -68,8 +68,8 @@
                             </div>
                             <div class="block justify-center items-center  q-mb-md ">
                                 <div class="flex justify-center items-center q-mb-md">
-                                    <q-img class="rounded-borders" rounded-borders fit="fill" :ratio="16 / 9"
-                                        width="200px" src="../../assets/images/login_banner_4.png"></q-img>
+                                    <q-img class="rounded-borders" rounded-borders fit="fill" :ratio="16 / 9" width="200px"
+                                        src="../../assets/images/login_banner_4.png"></q-img>
                                 </div>
                                 <div class="text-center text-subtitle2">
                                     <span>Hệ thống quản lí ứng viên</span>
@@ -89,7 +89,7 @@
         </div>
         <div class="col-8  ">
             <div class="flex column	 fit justify-center items-center  bg-grey-1">
-                <div class="" style="width: 50%;">
+                <form @submit.prevent="submitLogin" class="" style="width: 50%;">
                     <div class="text-bold text-h5 q-mb-lg">
                         <span>Đăng nhập</span>
                     </div>
@@ -108,8 +108,8 @@
                                 <span>Mật khẩu <span class="text-negative">*</span></span>
                             </div>
                             <div>
-                                <q-input :type="isPwd ? 'password' : 'text'" color="negative" v-model="password"
-                                    outlined dense>
+                                <q-input :type="isPwd ? 'password' : 'text'" color="negative" v-model="password" outlined
+                                    dense>
                                     <template v-slot:append>
                                         <q-icon size="xs" :name="isPwd ? 'visibility_off' : 'visibility'"
                                             class="cursor-pointer" @click="isPwd = !isPwd" />
@@ -130,8 +130,8 @@
                             <div class="flex justify-end">
 
                                 <q-btn :disable="loading" unelevated label="Đăng nhập" color="negative"
-                                @click="submitLogin"></q-btn>
-                                
+                                    @click="submitLogin"></q-btn>
+
                             </div>
                             <div>
 
@@ -146,7 +146,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </form>
             </div>
         </div>
     </div>
@@ -192,9 +192,23 @@ export default {
     created() {
         this.$emit("update:layout", LayoutFakeVue)
     },
+    mounted() {
+        // Attach event listener to the Enter key
+        document.addEventListener('keydown', this.handleKeydown);
+    },
+    beforeDestroy() {
+        // Remove event listener before component is destroyed
+        document.removeEventListener('keydown', this.handleKeydown);
+    },
     methods: {
+        handleKeydown(event) {
+            if (event.key === 'Enter') {
+                this.submitLogin();
+            }
+        },
         submitLogin() {
             this.loading = true;
+            console.log(this.password);
             if (this.password && this.email && this.validateEmail(this.email)) {
                 try {
                     login({ email: this.email, password: this.password }).then(data => {
@@ -213,6 +227,8 @@ export default {
                                         }
                                         this.loading = false;
                                         this.message = ""
+                                        this.password = '' 
+                                        this.email = ''
                                         this.$router.push("/")
                                     } else {
                                         this.message = "Tài khoản không là tài khoản doanh nghiệp"
@@ -229,7 +245,7 @@ export default {
                             })
                         } else {
                             this.loading = false;
-
+                            this.message = "Sai mật khẩu hoặc người dùng không tồn tại"
                             throw new Error("cant get user")
                         }
                     })
@@ -267,8 +283,8 @@ export default {
     color: rgba(0, 0, 0, 1);
 }
 
-.hover:hover{
+.hover:hover {
     color: $negative;
-    transition: ease-in-out 200ms ;
+    transition: ease-in-out 200ms;
 }
 </style>

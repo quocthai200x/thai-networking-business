@@ -83,7 +83,7 @@ import { useSearchStore } from "@/stores/searchStore"
 import { useUserStore } from "@/stores/userStore"
 import { useCompanyStore } from "../stores/companyStore"
 
-import { logout } from "@/apis/auth"
+import { logout } from "../apis/auth"
 import Footer from "./Footer.vue"
 import { useJobStore } from '../stores/jobStore'
 import { useRoleStore } from '../stores/roleStore'

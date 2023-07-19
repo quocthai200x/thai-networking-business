@@ -124,8 +124,10 @@ export default {
 
     data() {
         const date = new Date();
-        const startDate = new Date(date.getFullYear(), date.getMonth(), 1);
-        const endDate = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+        const startOffsetMonths = -3;
+        const endOffsetMonths = 3;
+        const startDate = new Date(date.getFullYear(), date.getMonth() + startOffsetMonths, 1);
+        const endDate = new Date(date.getFullYear(), date.getMonth() + endOffsetMonths + 1, 0);
         const procedure_label = ['Nhận hồ sơ', "Duyệt hồ sơ", "Phỏng vấn", "Đề nghị nhận việc", "Đã tuyển", "Không đạt", "Ứng viên từ chối"]
         return {
             visiblePage: false,
@@ -330,11 +332,11 @@ export default {
         },
         formatDate(date) {
             const dayFrom = date[0].getDate();
-            const monthFrom = date[0].getMonth() - 3;
+            const monthFrom = date[0].getMonth()
             const yearFrom = date[0].getFullYear();
 
             const dayTo = date[1].getDate();
-            const monthTo = date[1].getMonth() + 3;
+            const monthTo = date[1].getMonth()
             const yearTo = date[1].getFullYear();
 
             return `${dayFrom}/${monthFrom}/${yearFrom} - ${dayTo}/${monthTo}/${yearTo}  `;
