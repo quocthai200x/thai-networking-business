@@ -168,8 +168,8 @@
                                     <div class="col-9">{{ employeeSelected.info.name }}</div>
                                     <div class="col-3">Email: </div>
                                     <div class="col-9">{{ employeeSelected.email }}</div>
-                                    <div class="col-3">Vai trò: </div>
-                                    <div class="col-9">{{ employeeSelected.roleId.name }}</div>
+                                    <!-- <div class="col-3">Vai trò: </div>
+                                    <div class="col-9">{{ JSON.stringify(employeeSelected) }}</div> -->
 
                                 </div>
                                 <div class="row" v-else>
